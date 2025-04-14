@@ -1,5 +1,5 @@
 # stoc-kart
-Stok'Kart dashboard tool
+Stoc'Kart dashboard tool
 
 ---
 

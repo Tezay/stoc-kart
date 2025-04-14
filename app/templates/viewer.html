@@ -1,0 +1,16 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Viewer</title>
+</head>
+<body>
+    <h1>Visualisation des données d'occupation</h1>
+    {% if image_url %}
+        <img src="{{ image_url }}" alt="Visualisation des obstacles">
+    {% else %}
+        <p>Erreur : Impossible de charger l'image.</p>
+    {% endif %}
+</body>
+</html>
