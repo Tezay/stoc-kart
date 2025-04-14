@@ -32,3 +32,7 @@ def viewer():
         return render_template('viewer.html', image_url=image_url)
     else:
         return "Erreur lors de la génération de l'image", 500
+    
+@bp.route('/new_map')
+def new_map():
+    return render_template('new_map.html')
