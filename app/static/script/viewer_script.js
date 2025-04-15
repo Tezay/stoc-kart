@@ -1,26 +1,51 @@
 let selectedPoint = null;
 let selectedPointType = null;
+let hasStartPoint = false;
+let clickedButton = false; // Ajout de cette variable manquante
 
 document.getElementById('add-start-btn').addEventListener('click', () => {
     startPointSelection('start');
-
     document.getElementById('add-start-btn').style.backgroundColor = 'lightgreen';
     clickedButton = true;
 });
 
 document.getElementById('add-point-btn').addEventListener('click', () => {
     startPointSelection('end');
-    // Change button color to indicate selection
     document.getElementById('add-point-btn').style.backgroundColor = 'lightcoral';
     clickedButton = true;
 });
 
 function startPointSelection(type) {
+    if (type === 'start' && hasStartPoint) {
+        showError("Un point de départ existe déjà.");
+        clickedButton = false; // Réinitialiser l'état du bouton
+        resetButtonColors();
+        return;
+    }
+    
+    if (type === 'end' && !hasStartPoint) {
+        showError("Vous devez d'abord placer un point de départ.");
+        clickedButton = false; // Réinitialiser l'état du bouton
+        resetButtonColors();
+        return;
+    }
+    
     selectedPointType = type;
     document.getElementById('click-instruction').style.display = 'block';
     
     const plot = document.getElementById('plotContainer').getElementsByClassName('js-plotly-plot')[0];
     plot.on('plotly_click', handlePlotClick);
+}
+
+function showError(message) {
+    document.getElementById('errorMessage').textContent = message;
+    document.getElementById('errorDialog').style.display = 'block';
+}
+
+function closeErrorDialog() {
+    document.getElementById('errorDialog').style.display = 'none';
+    clickedButton = false; // S'assurer que l'état du bouton est réinitialisé à la fermeture de la popup
+    resetButtonColors();
 }
 
 function handlePlotClick(data) {
@@ -55,6 +80,9 @@ function confirmPointName() {
     .then(response => response.json())
     .then(data => {
         if (data.success) {
+            if (selectedPointType === 'start') {
+                hasStartPoint = true;
+            }
             location.reload();
         } else {
             alert('Erreur lors de l\'ajout du point');
@@ -69,8 +97,10 @@ function cancelPointName() {
 }
 
 function resetButtonColors() {
-    document.getElementById('add-start-btn').style.backgroundColor = '';
-    document.getElementById('add-point-btn').style.backgroundColor = '';
+    if (!clickedButton) { // Ne réinitialiser les couleurs que si aucun bouton n'est actif
+        document.getElementById('add-start-btn').style.backgroundColor = '';
+        document.getElementById('add-point-btn').style.backgroundColor = '';
+    }
 }
 
 function closeDialog() {
@@ -174,3 +204,14 @@ function closeRenameDialog() {
     document.getElementById('newPointName').value = '';
     poiToRename = null;
 }
+
+document.addEventListener('DOMContentLoaded', function() {
+    // Vérifier si un point de départ existe déjà dans la liste des POIs
+    const pois = document.querySelectorAll('table tbody tr');
+    pois.forEach(poi => {
+        const poiType = poi.querySelector('td:nth-child(2)').textContent;
+        if (poiType === 'start') {
+            hasStartPoint = true;
+        }
+    });
+});
