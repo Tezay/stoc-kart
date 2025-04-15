@@ -1,5 +1,9 @@
 import os
+
+import numpy as np
 from flask import Blueprint, redirect, url_for, render_template, request, send_from_directory, jsonify
+from plotly.callbacks import Points
+from scipy.interpolate import griddata
 
 from backend.pathfinding.a_star import astar_pathfinding
 from backend.viewer import visualize_occupancy_data, get_map_data
@@ -98,12 +102,25 @@ def add_poi(map_name):
     )
 
     # Faudrait donc faire le traitement pour le pathfinding à partir des données récupérées juste ici
-    # ...
+    start_point = None
+    end_point = None
+    
+    points = get_poi_map(file_path)
+    for point in points:
+        if point["type"] == np.str_('start') and start_point is None:
+            start_point = point
+        
+        if point["type"] == np.str_('end'):
+            end_point = point
+
+    grid, start_point, end_point = get_map_data(file_path, start_point["name"], end_point["name"])
+
+    path = astar_pathfinding(grid, start_point, end_point)
+    
+    print(path)
 
     # On peut ensuite sauvegarder le path obtenu avec cette fonction :
-    test_path = [(0, 0), (1, 1), (2, 2), (3, 3)]  # Liste de tuple exemple
-    add_new_path_to_map(file_path, test_path, "Chemin test")
-
+    add_new_path_to_map(file_path, path, "Chemin test 2")
     
     return jsonify({'success': success})
 
@@ -147,10 +164,5 @@ def create_course(map_name):
     
     print(start_point)
     print(end_point)
-
-    # Et donc ici faudra faire le traitement pour le pathfinding à patir des données récupérées
-    path = astar_pathfinding(grid, start_point, end_point)
-    
-    print(path)
     
     return render_template('create_course.html', plot_html=plot_html, map_name=map_name)
