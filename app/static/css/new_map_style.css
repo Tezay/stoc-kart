@@ -14,13 +14,11 @@ button.effect {
     letter-spacing: 2px;
 }
 
-#upload-form {
+#process-form {
     display: flex;
     flex-direction: column;
-}
-
-#upload-form button {
-    margin: 10px;
+    justify-content: center;
+    align-items: center;
 }
 
 #file-input {
