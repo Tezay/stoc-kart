@@ -195,25 +195,32 @@ def add_new_path_to_map(map_path, path_points, path_name="path"):
         bool: True si l'ajout a réussi, False sinon
     """
     try:
-        data = dict(np.load(map_path, allow_pickle=True))
+        # Charger les données existantes
+        with np.load(map_path, allow_pickle=True) as npz:
+            data = dict(npz)
         
+        # Initialiser le dictionnaire paths s'il n'existe pas
         if 'paths' not in data:
-            data['paths'] = {}
+            data['paths'] = np.array(dict(), dtype=object)
         
-        
+        # Convertir le dictionnaire paths en dictionnaire Python standard
+        paths_dict = data['paths'].item() if isinstance(data['paths'], np.ndarray) else {}
         
         # Convertir les points en arrays numpy
-        path_x = np.array([p[0] for p in path_points], dtype=float)
-        path_y = np.array([p[1] for p in path_points], dtype=float)
+        path_x = np.array([float(p[0]) for p in path_points])
+        path_y = np.array([float(p[1]) for p in path_points])
         
-        # Stocker le chemin avec son nom
-        data['paths'][path_name] = {
+        # Mettre à jour le dictionnaire avec le nouveau chemin
+        paths_dict[path_name] = {
             'x': path_x,
             'y': path_y
         }
         
+        # Convertir le dictionnaire mis à jour en array numpy
+        data['paths'] = np.array(paths_dict)
+        
+        # Sauvegarder les données mises à jour
         np.savez(map_path, **data)
-        print("Crashed after this print ?")  ## Crashed here -----------
         return True
         
     except Exception as e:

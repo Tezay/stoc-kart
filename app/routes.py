@@ -101,26 +101,24 @@ def add_poi(map_name):
         poi_name=data.get('name', 'Point')
     )
 
-    # Faudrait donc faire le traitement pour le pathfinding à partir des données récupérées juste ici
-    start_point = None
-    end_point = None
-    
-    points = get_poi_map(file_path)
-    for point in points:
-        if point["type"] == np.str_('start') and start_point is None:
-            start_point = point
+    # Process l'algo de pathfinding uniquement sur un point de type "end"
+    if data['type'] == 'end':
+        points = get_poi_map(file_path)
+        start_point = None
         
-        if point["type"] == np.str_('end'):
-            end_point = point
-
-    grid, start_point, end_point = get_map_data(file_path, start_point["name"], end_point["name"])
-
-    path = astar_pathfinding(grid, start_point, end_point)
-    
-    print(path)
-
-    # On peut ensuite sauvegarder le path obtenu avec cette fonction :
-    add_new_path_to_map(file_path, path, "Chemin test 2")
+        # Récupère le point de départ
+        for point in points:
+            if point["type"] == np.str_('start'):
+                start_point = point
+                break
+        
+        # Si on a un point de départ, on effectue le pathfinding
+        if start_point is not None:
+            grid, start_coords, end_coords = get_map_data(file_path, start_point["name"], data.get('name', 'Point'))
+            path = astar_pathfinding(grid, start_coords, end_coords)
+            path_name = "path_to_" + data.get('name', 'Point')
+            # Ajoute le chemin à la map
+            add_new_path_to_map(file_path, path, path_name)
     
     return jsonify({'success': success})
 
