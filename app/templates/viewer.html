@@ -14,5 +14,8 @@
     {% else %}
         <p>Erreur : Impossible de charger le graphique.</p>
     {% endif %}
+    <form action="{{ url_for('main.delete_map', map_name=map_name) }}" method="post" onsubmit="return confirm('Êtes-vous sûr de vouloir supprimer cette map ? Cette action est irréversible.')">
+        <button type="submit">Supprimer la map</button>
+    </form>
 </body>
 </html>

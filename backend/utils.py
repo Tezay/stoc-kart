@@ -2,16 +2,16 @@ import os
 
 def list_npz_files(directory="data/NPZ-output/"):
     """
-    Liste tous les fichiers NPZ dans le répertoire spécifié.
+    Liste tous les fichiers NPZ dans le répertoire spécifié sans l'extension .npz.
 
     Args:
         directory (str): Chemin du répertoire à scanner.
 
     Returns:
-        list: Liste des noms de fichiers NPZ trouvés.
+        list: Liste des noms de fichiers NPZ trouvés sans l'extension .npz.
     """
     try:
-        return [f for f in os.listdir(directory) if f.endswith('.npz')]
+        return [os.path.splitext(f)[0] for f in os.listdir(directory) if f.endswith('.npz')]
     except FileNotFoundError:
         print(f"Le répertoire {directory} n'existe pas.")
         return []
@@ -36,3 +36,23 @@ def get_latest_file(directory, extension=".svg"):
     except FileNotFoundError:
         print(f"Le répertoire {directory} n'existe pas.")
         return None
+
+def delete_map_files(map_name):
+    """
+    Supprime les fichiers associés à une map dans les répertoires SVG-input, NPZ-output et map_previews.
+
+    Args:
+        map_name (str): Nom de la map (sans extension).
+    """
+    directories = {
+        "SVG-input": f"data/SVG-input/{map_name}.svg",
+        "NPZ-output": f"data/NPZ-output/{map_name}.npz",
+        "map_previews": f"app/static/map_previews/{map_name}.png"
+    }
+
+    for dir_name, file_path in directories.items():
+        if os.path.exists(file_path):
+            os.remove(file_path)
+            print(f"Fichier supprimé : {file_path}")
+        else:
+            print(f"Fichier introuvable dans {dir_name} : {file_path}")

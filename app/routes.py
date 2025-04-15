@@ -2,7 +2,7 @@ import os
 import shutil  # Pour déplacer les fichiers uploadés
 from flask import Blueprint, redirect, url_for, render_template, request, send_from_directory
 from backend.viewer import visualize_occupancy_data
-from backend.utils import list_npz_files
+from backend.utils import list_npz_files, delete_map_files
 from backend.svg_convertor import svg_to_occupancy, save_occupancy_data
 
 # Créeation du blueprint pour les routes principales
@@ -23,14 +23,14 @@ def serve_generated_file(filename):
 @bp.route('/viewer/<map_name>')
 def viewer(map_name):
     # Chemin du fichier NPZ
-    file_path = os.path.join("data/NPZ-output", map_name)
+    file_path = os.path.join("data/NPZ-output", f"{map_name}.npz")
 
     # Génération du graphique interactif
     plot_html = visualize_occupancy_data(file_path)
 
     # Passer le contenu HTML du graphique à la page HTML
     if plot_html:
-        return render_template('viewer.html', plot_html=plot_html)
+        return render_template('viewer.html', plot_html=plot_html, map_name=map_name)
     else:
         return "Erreur lors de la génération du graphique", 500
 
@@ -74,3 +74,12 @@ def upload_and_process_svg():
         return redirect(url_for('main.home'))
     except Exception as e:
         return f"Error processing SVG: {str(e)}", 500
+
+@bp.route('/delete_map/<map_name>', methods=['POST'])
+def delete_map(map_name):
+    try:
+        # Call the utility function to delete the map files
+        delete_map_files(map_name)
+        return redirect(url_for('main.home'))
+    except Exception as e:
+        return f"Error deleting map: {str(e)}", 500
