@@ -5,27 +5,55 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Viewer</title>
     <script src="https://cdn.plot.ly/plotly-latest.min.js"></script>
-    <link rel="stylesheet" href="{{ url_for('static', filename='css/viewer_style.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/create_course.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/button.css') }}">
 </head>
 <body>
-    <h1>Séléctionner le point d'arrivé</h1>
-    <h2>{{ map_name }}</h2>
-    
-    <div class="controls">
-        <span> Faire un truc pour séléctionner le point d'arrivé </span>
-    </div>
+<header>
+    <h1>Sélectionnez la course</h1>
+</header>
 
-    <form>
+
+<main>
+    {% if plot_html %}
+        <div id="plot-container">{{ plot_html|safe }}</div>
+    {% else %}
+        <p>Erreur : Impossible de charger le graphique.</p>
+    {% endif %}
+
+    <ul>
+        <li>
+            <!-- TODO - DISPLAY A ROUTE FOR EACH START/END POINT -->
+            <button class="effect"><span>porte</span><span><img
+                    src="../static/assets/right-arrow.svg"/></span><span>lit</span></button>
+        </li>
+        <li>
+            <button class="effect"><span>porte</span><span><img
+                    src="../static/assets/right-arrow.svg"/></span><span>lit</span></button>
+        </li>
+        <li>
+            <button class="effect"><span>porte</span><span><img
+                    src="../static/assets/right-arrow.svg"/></span><span>lit</span></button>
+        </li>
+        <li>
+            <button class="effect"><span>porte</span><span><img
+                    src="../static/assets/right-arrow.svg"/></span><span>lit</span></button>
+        </li>
+        <li>
+            <button class="effect"><span>porte</span><span><img
+                    src="../static/assets/right-arrow.svg"/></span><span>lit</span></button>
+        </li>
+    </ul>
+
+    <!--
+    <form class="controls">
         <input name="start_point" value="{{ start_point }}">
         <input name="end_point" value="{{ end_point }}">
         <button type="submit">Créer la course</button>
     </form>
-
-    {% if plot_html %}
-        <div id="plotContainer">{{ plot_html|safe }}</div>
-    {% else %}
-        <p>Erreur : Impossible de charger le graphique.</p>
-    {% endif %}
+    -->
+</main>
 
 </body>
 </html>

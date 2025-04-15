@@ -9,7 +9,7 @@
 </head>
 <body>
     <div id="container">
-        <h2>Selectionner la map</h2>
+        <h2>Sélectionnez la map</h2>
         <ul>
             {% for map_name in maps %}
             <a href="{{ url_for('main.create_course', map_name=map_name) }}">
