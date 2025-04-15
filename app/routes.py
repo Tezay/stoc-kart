@@ -12,11 +12,6 @@ bp = Blueprint('main', __name__)
 def home():
     return render_template('index.html')
 
-# Ajout d'une route pour servir les images générées
-@bp.route('/generated/<filename>')
-def serve_generated_file(filename):
-    return send_from_directory('static/generated', filename)
-
 @bp.route('/maps_list')
 def maps_list():
     maps = list_npz_files("data/NPZ-output/")
@@ -99,3 +94,22 @@ def add_poi(map_name):
     )
     
     return jsonify({'success': success})
+
+@bp.route('/select_map')
+def select_map():
+    maps = list_npz_files("data/NPZ-output/")
+    return render_template('select_map.html', maps=maps)
+
+@bp.route('/create_course/<map_name>')
+def create_course(map_name):
+    # Chemin du fichier NPZ
+    file_path = os.path.join("data/NPZ-output", f"{map_name}.npz")
+
+    # Génération du graphique interactif
+    plot_html = visualize_occupancy_data(file_path)
+
+    # Passer le contenu HTML du graphique à la page HTML
+    if plot_html:
+        return render_template('create_course.html', plot_html=plot_html, map_name=map_name)
+    else:
+        return "Erreur lors de la génération du graphique", 500
