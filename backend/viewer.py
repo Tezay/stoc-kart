@@ -1,14 +1,15 @@
-import os
 import numpy as np
-import matplotlib.pyplot as plt
+import plotly.graph_objects as go
 
-def visualize_occupancy_data(file_path, output_image_path):
+def visualize_occupancy_data(file_path):
     """
-    Charge et visualise les données d'occupation à partir d'un fichier NPZ et sauvegarde le plot en tant qu'image.
+    Charge et visualise les données d'occupation à partir d'un fichier NPZ et génère un plot interactif avec Plotly.
 
     Args:
-        file_path (str): Chemin vers le fichier NPZ contenant les données d'occupation
-        output_image_path (str): Chemin pour sauvegarder l'image générée
+        file_path (str): Chemin vers le fichier NPZ contenant les données d'occupation.
+
+    Returns:
+        str: Contenu HTML du graphique interactif Plotly.
     """
     try:
         # Chargement des données
@@ -19,19 +20,39 @@ def visualize_occupancy_data(file_path, output_image_path):
         min_y = data["min_y"]
         max_y = data["max_y"]
 
-        # Création de la visualisation
-        plt.figure(figsize=(10, 8))
-        plt.imshow(obstacle_grid, cmap='Reds', origin='lower')
-        plt.title("Visualisation des obstacles")
-        plt.colorbar(label='Occupation')
-        plt.xlabel(f'X ({min_x:.2f} to {max_x:.2f})')
-        plt.ylabel(f'Y ({min_y:.2f} to {max_y:.2f})')
+        # Vérification et conversion des données pour Plotly
+        if obstacle_grid.dtype != np.float64:
+            obstacle_grid = obstacle_grid.astype(float)
 
-        # Sauvegarde du plot en tant qu'image
-        plt.savefig(output_image_path)
-        plt.close()
+        # Inverser l'axe Y pour correspondre à l'orientation de matplotlib
+        obstacle_grid = np.flipud(obstacle_grid)
 
-        return output_image_path
+        # Création de la visualisation interactive avec Plotly
+        fig = go.Figure(data=go.Heatmap(
+            z=obstacle_grid,
+            colorscale='Reds',
+            colorbar=dict(title="Occupation")
+        ))
+
+        # Mise à jour des axes et du titre
+        fig.update_layout(
+            title="Visualisation interactive des obstacles",
+            xaxis=dict(
+                title=f"X ({min_x:.2f} to {max_x:.2f})",
+                range=[min_x, max_x],
+                autorange=True  # Activer l'autoscale pour l'axe X
+            ),
+            yaxis=dict(
+                title=f"Y ({min_y:.2f} to {max_y:.2f})",
+                range=[min_y, max_y],
+                autorange=True  # Activer l'autoscale pour l'axe Y
+            ),
+            height=600,
+            width=800
+        )
+
+        # Retourne le contenu HTML du graphique
+        return fig.to_html(full_html=False)
 
     except Exception as e:
         print(f"Erreur lors de la visualisation: {str(e)}")
@@ -40,9 +61,8 @@ def visualize_occupancy_data(file_path, output_image_path):
 # Exemple d'utilisation
 if __name__ == "__main__":
     file_path = "data/NPZ-output/occupancy_data.npz"
-    output_image_path = "output/occupancy_plot.png"
-    result = visualize_occupancy_data(file_path, output_image_path)
+    result = visualize_occupancy_data(file_path)
     if result:
-        print(f"Image sauvegardée à : {result}")
+        print("Graphique interactif généré avec succès.")
     else:
         print("Échec de la visualisation.")

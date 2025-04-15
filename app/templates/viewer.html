@@ -4,13 +4,15 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Viewer</title>
+    <script src="https://cdn.plot.ly/plotly-latest.min.js"></script>
 </head>
 <body>
     <h1>Visualisation des données d'occupation</h1>
-    {% if image_url %}
-        <img src="{{ image_url }}" alt="Visualisation des obstacles">
+    {% if plot_html %}
+        <!-- Contenu HTML du graphique Plotly -->
+        <div>{{ plot_html|safe }}</div>
     {% else %}
-        <p>Erreur : Impossible de charger l'image.</p>
+        <p>Erreur : Impossible de charger le graphique.</p>
     {% endif %}
 </body>
 </html>
