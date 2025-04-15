@@ -1,12 +1,35 @@
 let selectedPoint = null;
 let selectedPointType = null;
 
+let clickedButton = false;
+
+// Remove button color on click anywhere else
+document.addEventListener('click', (event) => {
+    const target = event.target;
+    if (!target.closest('#add-start-btn') && !target.closest('#add-point-btn')) {
+        if (clickedButton) {
+            document.getElementById('add-start-btn').style.backgroundColor = '';
+            document.getElementById('add-point-btn').style.backgroundColor = '';
+            clickedButton = false;
+
+            // Close the dialog to avoid being stuck in selection mode
+            closeDialog();
+        }
+    }
+});
+
 document.getElementById('add-start-btn').addEventListener('click', () => {
     startPointSelection('start');
+
+    document.getElementById('add-start-btn').style.backgroundColor = 'lightgreen';
+    clickedButton = true;
 });
 
 document.getElementById('add-point-btn').addEventListener('click', () => {
     startPointSelection('end');
+    // Change button color to indicate selection
+    document.getElementById('add-point-btn').style.backgroundColor = 'lightcoral';
+    clickedButton = true;
 });
 
 function startPointSelection(type) {
