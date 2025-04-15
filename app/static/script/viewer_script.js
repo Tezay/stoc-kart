@@ -1,8 +1,8 @@
 let addingPoi = false;
 let currentPoiType = '';
-const addStartBtn = document.getElementById('addStartBtn');
-const addPoiBtn = document.getElementById('addPoiBtn');
-const clickInstruction = document.getElementById('clickInstruction');
+const addStartBtn = document.getElementById('add-start-btn');
+const addPoiBtn = document.getElementById('add-point-btn');
+const clickInstruction = document.getElementById('click-instruction');
 
 function setupPoiButton(button, poiType) {
     button.addEventListener('click', function() {

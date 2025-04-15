@@ -14,7 +14,12 @@ button:hover {
     cursor: pointer;
 }
 
-.effect, .effect-reverse:hover {
+.effect-red {
+    color: rgb(255, 61, 61);
+    border: 1px solid rgb(255, 61, 61);
+}
+
+.effect, .effect-red, .effect-reverse:hover {
     color: #000;
     background: transparent;
     box-shadow: 0 0 0 0 transparent;
@@ -32,16 +37,25 @@ button:hover {
     transition: all 0.2s ease-out;
 }
 
-.effect:hover::before {
+.effect-red:hover {
+    background: rgb(255, 61, 61);
+    color: #fff;
+    box-shadow: 0 0 15px 1px rgba(236, 0, 0, 0.81);
+    -webkit-transition: all 0.2s ease-out;
+    -moz-transition: all 0.2s ease-out;
+    transition: all 0.2s ease-out;
+}
+
+.effect:hover::before, .effect:hover::before {
     -webkit-animation: sh02 0.5s 0s linear;
     -moz-animation: sh02 0.5s 0s linear;
     animation: sh02 0.5s 0s linear;
 }
 
-.effect::before {
+.effect::before, .effect-red::before {
     content: '';
     display: block;
-    width: 0px;
+    width: 0;
     height: 86%;
     position: absolute;
     top: 7%;
@@ -72,7 +86,7 @@ button:hover {
     }
 }
 
-.effect:active {
+.effect:active, .effect-red:active {
     box-shadow: 0 0 0 0 transparent;
     -webkit-transition: box-shadow 0.2s ease-in;
     -moz-transition: box-shadow 0.2s ease-in;
