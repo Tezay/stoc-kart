@@ -173,3 +173,15 @@ cython_debug/
 
 # PyPI configuration file
 .pypirc
+
+# Ignore all files in data/SVG-input/ except default_map.svg
+data/SVG-input/*
+!data/SVG-input/default_map.svg
+
+# Ignore all files in data/NPZ-output/ except default_map.npz
+data/NPZ-output/*
+!data/NPZ-output/default_map.npz
+
+# Ignore all files in app/static/map_previews/ except default_map.png
+app/static/map_previews/*
+!app/static/map_previews/default_map.png

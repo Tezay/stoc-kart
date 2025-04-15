@@ -1,5 +1,6 @@
 import numpy as np
 import plotly.graph_objects as go
+import matplotlib.pyplot as plt
 
 def visualize_occupancy_data(file_path):
     """
@@ -57,6 +58,24 @@ def visualize_occupancy_data(file_path):
     except Exception as e:
         print(f"Erreur lors de la visualisation: {str(e)}")
         return None
+
+def generate_plot_preview(grid, bounds, output_path):
+    """
+    Génère et sauvegarde une preview PNG d'une matrice d'occupation sans échelle, titre, ou annotations.
+
+    Args:
+        grid (np.ndarray): Matrice d'occupation.
+        bounds (tuple): Limites de la bounding box (min_x, max_x, min_y, max_y).
+        output_path (str): Chemin où sauvegarder l'image PNG.
+    """
+    plt.figure(figsize=(8, 8))
+    plt.imshow(grid, cmap='Greys', origin='lower')
+    plt.axis('off')  # Supprime les axes
+    plt.gca().set_xticks([])  # Supprime les ticks sur l'axe X
+    plt.gca().set_yticks([])  # Supprime les ticks sur l'axe Y
+    plt.gca().set_frame_on(False)  # Supprime le cadre autour du graphique
+    plt.savefig(output_path, dpi=300, bbox_inches='tight', pad_inches=0)  # Supprime les marges
+    plt.close()
 
 # Exemple d'utilisation
 if __name__ == "__main__":
