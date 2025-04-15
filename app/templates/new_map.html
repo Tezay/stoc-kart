@@ -3,10 +3,40 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Stoc'Kart</title>
+    <!-- Import de la feuille de style CSS globale -->
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+    <!-- Import de la feuille de style spécifique pour la nouvelle carte -->
     <link rel="stylesheet" href="{{ url_for('static', filename='css/new_map_style.css') }}">
-    <title>New map</title>
 </head>
 <body>
-    <h1>Créer une nouvelle map</h1>
+    <form id="upload-form" method="POST" enctype="multipart/form-data">
+        <input type="file" name="svg_file" id="file-input" accept=".svg" />
+        <label for="file-input" class="file-input-label effect">Choose SVG File</label>
+        <div id="file-info" class="file-info">No file selected</div>
+        <button type="submit" class="effect">Upload</button>
+    </form>
+
+    <script>
+        // DIDNT KNOW WHERE TO PUT THIS IN THE PROJECT, TEMPORARY SOLUTION
+        document.addEventListener('DOMContentLoaded', function() {
+            const fileInput = document.getElementById('file-input');
+            const fileInfo = document.getElementById('file-info');
+
+            fileInput.addEventListener('change', function() {
+                if (fileInput.files.length > 0) {
+                    fileInfo.textContent = fileInput.files[0].name;
+                    fileInfo.classList.add('file-selected');
+
+                    // Optional: Update the label text
+                    document.querySelector('.file-input-label').textContent = 'Change File';
+                } else {
+                    fileInfo.textContent = 'No file selected';
+                    fileInfo.classList.remove('file-selected');
+                    document.querySelector('.file-input-label').textContent = 'Choose SVG File';
+                }
+            });
+        });
+    </script>
 </body>
 </html>
