@@ -1,5 +1,7 @@
 import os
 from flask import Blueprint, redirect, url_for, render_template, request, send_from_directory, jsonify
+
+from backend.pathfinding.a_star import astar_pathfinding
 from backend.viewer import visualize_occupancy_data, get_map_data
 from backend.utils import list_npz_files, delete_map_files, add_poi_to_map, get_poi_map, delete_poi_from_map, rename_poi_in_map
 from backend.svg_convertor import svg_to_occupancy, save_occupancy_data
@@ -134,10 +136,13 @@ def create_course(map_name):
     start_point_name_test = "test départ"
     end_point_name_test = "test arrivée"
     grid, start_point, end_point = get_map_data(file_path, start_point_name_test, end_point_name_test)
-    print(grid)
+    
     print(start_point)
     print(end_point)
 
     # Et donc ici faudra faire le traitement pour le pathfinding à patir des données récupérées
-
+    path = astar_pathfinding(grid, start_point, end_point)
+    
+    print(path)
+    
     return render_template('create_course.html', plot_html=plot_html, map_name=map_name)

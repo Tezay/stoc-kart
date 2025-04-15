@@ -1,12 +1,13 @@
+
 def astar_pathfinding(grid, start, end):
     """
     Implements A* pathfinding algorithm
-
+    
     Args:
-        grid: 2D matrix where True represents a wall (unwalkable) and False represents walkable space
+        grid: 2D matrix where 1 represents a wall (unwalkable) and 0 represents walkable space
         start: Tuple of (x, y) coordinates for the starting point
         end: Tuple of (x, y) coordinates for the end point
-
+        
     Returns:
         List of (x, y) coordinates representing the path from start to end, or empty list if no path exists
     """
@@ -19,8 +20,8 @@ def astar_pathfinding(grid, start, end):
         x, y = pos
         # Check all 8 directions (including diagonals)
         directions = [
-            (x + 1, y), (x - 1, y), (x, y + 1), (x, y - 1),  # 4-directional
-            (x + 1, y + 1), (x - 1, y - 1), (x + 1, y - 1), (x - 1, y + 1)  # diagonals
+            (x+1, y), (x-1, y), (x, y+1), (x, y-1),  # 4-directional
+            (x+1, y+1), (x-1, y-1), (x+1, y-1), (x-1, y+1)  # diagonals
         ]
 
         # Filter valid neighbors
@@ -29,12 +30,12 @@ def astar_pathfinding(grid, start, end):
             # Check if within grid bounds
             if nx < 0 or ny < 0 or nx >= len(grid[0]) or ny >= len(grid):
                 continue
-            # Check if walkable
-            if grid[ny][nx]:  # True means wall (unwalkable)
+            # Check if walkable (0 is walkable, 1 is wall)
+            if grid[ny][nx] == 1:  # 1 means wall (unwalkable)
                 continue
             # For diagonal movement, make sure we're not cutting corners through walls
-            if (nx != x and ny != y):
-                if grid[y][nx] or grid[ny][x]:  # Can't cut through walls
+            if nx != x and ny != y:
+                if grid[y][nx] == 1 or grid[ny][x] == 1:  # Can't cut through walls
                     continue
 
             # Calculate cost: 1.0 for cardinals, 1.4 for diagonals
