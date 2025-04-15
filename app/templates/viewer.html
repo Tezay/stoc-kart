@@ -38,6 +38,17 @@
     </form>
 </main>
 
+<div id="pointNameDialog" class="dialog">
+    <div class="dialog-content">
+        <h2>Nommer le point</h2>
+        <input type="text" id="pointName" placeholder="Entrez un nom pour ce point">
+        <div class="dialog-buttons">
+            <button onclick="confirmPointName()">Valider</button>
+            <button onclick="cancelPointName()">Annuler</button>
+        </div>
+    </div>
+</div>
+
 <script>
     // Définir le nom de la map pour le script JavaScript
     const mapName = "{{ map_name }}";

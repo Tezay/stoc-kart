@@ -1,6 +1,6 @@
 import os
 from flask import Blueprint, redirect, url_for, render_template, request, send_from_directory, jsonify
-from backend.viewer import visualize_occupancy_data
+from backend.viewer import visualize_occupancy_data, get_map_data
 from backend.utils import list_npz_files, delete_map_files, add_poi_to_map
 from backend.svg_convertor import svg_to_occupancy, save_occupancy_data
 
@@ -90,7 +90,8 @@ def add_poi(map_name):
         file_path,
         x=data['x'],
         y=data['y'],
-        poi_type=data['type']
+        poi_type=data['type'],
+        poi_name=data.get('name', 'Point')
     )
     
     return jsonify({'success': success})
@@ -108,8 +109,14 @@ def create_course(map_name):
     # Génération du graphique interactif
     plot_html = visualize_occupancy_data(file_path)
 
-    # Passer le contenu HTML du graphique à la page HTML
-    if plot_html:
-        return render_template('create_course.html', plot_html=plot_html, map_name=map_name)
-    else:
-        return "Erreur lors de la génération du graphique", 500
+    # Afficher en brute dans la console les données 
+    start_point_name_test = "test départ"
+    end_point_name_test = "test arrivée"
+    grid, start_point, end_point = get_map_data(file_path, start_point_name_test, end_point_name_test)
+    print(grid)
+    print(start_point)
+    print(end_point)
+
+    # Et donc ici faudra faire le traitement pour le pathfinding à patir des données récupérées
+
+    return render_template('create_course.html', plot_html=plot_html, map_name=map_name)

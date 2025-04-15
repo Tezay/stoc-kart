@@ -58,7 +58,7 @@ def delete_map_files(map_name):
         else:
             print(f"Fichier introuvable dans {dir_name} : {file_path}")
 
-def add_poi_to_map(map_path, x, y, poi_type='start'):
+def add_poi_to_map(map_path, x, y, poi_type='start', poi_name='Point'):
     """
     Ajoute un point d'intérêt à la carte.
     
@@ -67,23 +67,22 @@ def add_poi_to_map(map_path, x, y, poi_type='start'):
         x (float): Coordonnée X du point
         y (float): Coordonnée Y du point
         poi_type (str): Type du point d'intérêt
+        poi_name (str): Nom du point d'intérêt
     """
     try:
-        # Charger le fichier NPZ
         data = dict(np.load(map_path, allow_pickle=True))
         
-        # Convertir les POIs en arrays numpy pour le stockage
         if 'poi_x' not in data:
             data['poi_x'] = np.array([], dtype=float)
             data['poi_y'] = np.array([], dtype=float)
-            data['poi_types'] = np.array([], dtype='<U10')  # Unicode string array
+            data['poi_types'] = np.array([], dtype='<U10')
+            data['poi_names'] = np.array([], dtype='<U50')  # Pour stocker les noms
         
-        # Ajouter le nouveau point
         data['poi_x'] = np.append(data['poi_x'], x)
         data['poi_y'] = np.append(data['poi_y'], y)
         data['poi_types'] = np.append(data['poi_types'], poi_type)
+        data['poi_names'] = np.append(data['poi_names'], poi_name)
         
-        # Sauvegarder les données
         np.savez(map_path, **data)
         return True
         
