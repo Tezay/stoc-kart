@@ -155,12 +155,20 @@ def create_course(map_name):
     # Génération du graphique interactif
     plot_html = visualize_occupancy_data(file_path)
 
-    # Afficher en brute dans la console les données 
-    start_point_name_test = "test départ"
-    end_point_name_test = "test arrivée"
-    grid, start_point, end_point = get_map_data(file_path, start_point_name_test, end_point_name_test)
+    # Récupérer les POIs
+    pois = get_poi_map(file_path)
     
-    print(start_point)
-    print(end_point)
+    # Filtrer pour obtenir seulement les points de départ et d'arrivée
+    start_points = [poi for poi in pois if poi['type'] == 'start']
+    end_points = [poi for poi in pois if poi['type'] == 'end']
     
-    return render_template('create_course.html', plot_html=plot_html, map_name=map_name)
+    # Créer toutes les combinaisons possibles
+    routes = []
+    for start in start_points:
+        for end in end_points:
+            routes.append({
+                'start': start['name'],
+                'end': end['name']
+            })
+    
+    return render_template('create_course.html', plot_html=plot_html, map_name=map_name, routes=routes)

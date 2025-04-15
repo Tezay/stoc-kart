@@ -23,27 +23,13 @@
     {% endif %}
 
     <ul>
-        <li>
-            <!-- TODO - DISPLAY A ROUTE FOR EACH START/END POINT -->
-            <button class="effect"><span>porte</span><span><img
-                    src="../static/assets/right-arrow.svg"/></span><span>lit</span></button>
-        </li>
-        <li>
-            <button class="effect"><span>porte</span><span><img
-                    src="../static/assets/right-arrow.svg"/></span><span>lit</span></button>
-        </li>
-        <li>
-            <button class="effect"><span>porte</span><span><img
-                    src="../static/assets/right-arrow.svg"/></span><span>lit</span></button>
-        </li>
-        <li>
-            <button class="effect"><span>porte</span><span><img
-                    src="../static/assets/right-arrow.svg"/></span><span>lit</span></button>
-        </li>
-        <li>
-            <button class="effect"><span>porte</span><span><img
-                    src="../static/assets/right-arrow.svg"/></span><span>lit</span></button>
-        </li>
+        {% for route in routes %}
+        <a href="#">
+            <li class="effect">
+                <p>{{ route.end }}</p>
+            </li>
+        </a>
+        {% endfor %}
     </ul>
 
     <!--
