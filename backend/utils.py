@@ -200,6 +200,8 @@ def add_new_path_to_map(map_path, path_points, path_name="path"):
         if 'paths' not in data:
             data['paths'] = {}
         
+        
+        
         # Convertir les points en arrays numpy
         path_x = np.array([p[0] for p in path_points], dtype=float)
         path_y = np.array([p[1] for p in path_points], dtype=float)
@@ -211,6 +213,7 @@ def add_new_path_to_map(map_path, path_points, path_name="path"):
         }
         
         np.savez(map_path, **data)
+        print("Crashed after this print ?")  ## Crashed here -----------
         return True
         
     except Exception as e:
