@@ -1,7 +1,7 @@
 import os
 from flask import Blueprint, redirect, url_for, render_template, request, send_from_directory, jsonify
 from backend.viewer import visualize_occupancy_data, get_map_data
-from backend.utils import list_npz_files, delete_map_files, add_poi_to_map
+from backend.utils import list_npz_files, delete_map_files, add_poi_to_map, get_poi_map, delete_poi_from_map, rename_poi_in_map
 from backend.svg_convertor import svg_to_occupancy, save_occupancy_data
 
 # Créeation du blueprint pour les routes principales
@@ -24,10 +24,11 @@ def viewer(map_name):
 
     # Génération du graphique interactif
     plot_html = visualize_occupancy_data(file_path)
+    pois = get_poi_map(file_path)  # Récupérer les POIs
 
     # Passer le contenu HTML du graphique à la page HTML
     if plot_html:
-        return render_template('viewer.html', plot_html=plot_html, map_name=map_name)
+        return render_template('viewer.html', plot_html=plot_html, map_name=map_name, pois=pois)
     else:
         return "Erreur lors de la génération du graphique", 500
 
@@ -94,6 +95,26 @@ def add_poi(map_name):
         poi_name=data.get('name', 'Point')
     )
     
+    return jsonify({'success': success})
+
+@bp.route('/delete_poi/<map_name>', methods=['POST'])
+def delete_poi(map_name):
+    data = request.get_json()
+    file_path = os.path.join("data/NPZ-output", f"{map_name}.npz")
+    
+    success = delete_poi_from_map(file_path, data['name'])
+    return jsonify({'success': success})
+
+@bp.route('/rename_poi/<map_name>', methods=['POST'])
+def rename_poi(map_name):
+    data = request.get_json()
+    file_path = os.path.join("data/NPZ-output", f"{map_name}.npz")
+    
+    success = rename_poi_in_map(
+        file_path,
+        old_name=data['old_name'],
+        new_name=data['new_name']
+    )
     return jsonify({'success': success})
 
 @bp.route('/select_map')

@@ -81,3 +81,96 @@ function closeDialog() {
     document.getElementById('click-instruction').style.display = 'none';
     resetButtonColors();
 }
+
+let poiToDelete = null;
+
+document.querySelectorAll('.delete-poi').forEach(button => {
+    button.addEventListener('click', function() {
+        poiToDelete = this.dataset.poiName;
+        document.getElementById('deleteConfirmDialog').style.display = 'block';
+    });
+});
+
+function confirmDelete() {
+    if (!poiToDelete) return;
+    
+    fetch(`/delete_poi/${mapName}`, {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+            name: poiToDelete
+        })
+    })
+    .then(response => response.json())
+    .then(data => {
+        if (data.success) {
+            location.reload();
+        } else {
+            alert('Erreur lors de la suppression du point');
+        }
+    });
+    
+    closeDeleteDialog();
+}
+
+function cancelDelete() {
+    closeDeleteDialog();
+}
+
+function closeDeleteDialog() {
+    document.getElementById('deleteConfirmDialog').style.display = 'none';
+    poiToDelete = null;
+}
+
+let poiToRename = null;
+
+document.querySelectorAll('.rename-poi').forEach(button => {
+    button.addEventListener('click', function() {
+        poiToRename = this.dataset.poiName;
+        document.getElementById('newPointName').value = poiToRename;
+        document.getElementById('renameDialog').style.display = 'block';
+    });
+});
+
+function confirmRename() {
+    if (!poiToRename) return;
+    
+    const newName = document.getElementById('newPointName').value.trim();
+    if (!newName) {
+        alert('Le nom ne peut pas être vide');
+        return;
+    }
+    
+    fetch(`/rename_poi/${mapName}`, {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+            old_name: poiToRename,
+            new_name: newName
+        })
+    })
+    .then(response => response.json())
+    .then(data => {
+        if (data.success) {
+            location.reload();
+        } else {
+            alert('Erreur lors du renommage du point');
+        }
+    });
+    
+    closeRenameDialog();
+}
+
+function cancelRename() {
+    closeRenameDialog();
+}
+
+function closeRenameDialog() {
+    document.getElementById('renameDialog').style.display = 'none';
+    document.getElementById('newPointName').value = '';
+    poiToRename = null;
+}

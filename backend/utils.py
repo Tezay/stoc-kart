@@ -89,3 +89,95 @@ def add_poi_to_map(map_path, x, y, poi_type='start', poi_name='Point'):
     except Exception as e:
         print(f"Erreur lors de l'ajout du POI: {str(e)}")
         return False
+
+def get_poi_map(map_path):
+    """
+    Récupère tous les points d'intérêt d'une carte.
+    
+    Args:
+        map_path (str): Chemin vers le fichier NPZ
+
+    Returns:
+        list: Liste de dictionnaires contenant les infos de chaque POI
+              [{'name': str, 'type': str, 'x': float, 'y': float}, ...]
+    """
+    try:
+        data = np.load(map_path, allow_pickle=True)
+        if all(key in data for key in ['poi_x', 'poi_y', 'poi_types', 'poi_names']):
+            return [
+                {
+                    'name': name,
+                    'type': poi_type,
+                    'x': float(x),
+                    'y': float(y)
+                }
+                for name, poi_type, x, y in zip(
+                    data['poi_names'],
+                    data['poi_types'],
+                    data['poi_x'],
+                    data['poi_y']
+                )
+            ]
+        return []
+    except Exception as e:
+        print(f"Erreur lors de la récupération des POIs: {str(e)}")
+        return []
+
+def delete_poi_from_map(map_path, poi_name):
+    """
+    Supprime un point d'intérêt de la carte.
+    
+    Args:
+        map_path (str): Chemin vers le fichier NPZ
+        poi_name (str): Nom du point à supprimer
+
+    Returns:
+        bool: True si la suppression a réussi, False sinon
+    """
+    try:
+        data = dict(np.load(map_path, allow_pickle=True))
+        
+        if all(key in data for key in ['poi_x', 'poi_y', 'poi_types', 'poi_names']):
+            # Trouver l'index du POI à supprimer
+            idx = np.where(data['poi_names'] == poi_name)[0]
+            if len(idx) > 0:
+                # Supprimer le POI de tous les arrays
+                data['poi_x'] = np.delete(data['poi_x'], idx)
+                data['poi_y'] = np.delete(data['poi_y'], idx)
+                data['poi_types'] = np.delete(data['poi_types'], idx)
+                data['poi_names'] = np.delete(data['poi_names'], idx)
+                
+                # Sauvegarder les modifications
+                np.savez(map_path, **data)
+                return True
+                
+        return False
+    except Exception as e:
+        print(f"Erreur lors de la suppression du POI: {str(e)}")
+        return False
+
+def rename_poi_in_map(map_path, old_name, new_name):
+    """
+    Renomme un point d'intérêt dans la carte.
+    
+    Args:
+        map_path (str): Chemin vers le fichier NPZ
+        old_name (str): Ancien nom du point
+        new_name (str): Nouveau nom du point
+
+    Returns:
+        bool: True si le renommage a réussi, False sinon
+    """
+    try:
+        data = dict(np.load(map_path, allow_pickle=True))
+        
+        if all(key in data for key in ['poi_names']):
+            idx = np.where(data['poi_names'] == old_name)[0]
+            if len(idx) > 0:
+                data['poi_names'][idx[0]] = new_name
+                np.savez(map_path, **data)
+                return True
+        return False
+    except Exception as e:
+        print(f"Erreur lors du renommage du POI: {str(e)}")
+        return False

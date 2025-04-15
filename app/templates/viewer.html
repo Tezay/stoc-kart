@@ -30,6 +30,43 @@
             </button>
             <span id="click-instruction">Cliquez sur la carte pour placer le point</span>
         </div>
+
+        <div class="poi-list">
+            <h2>Points d'intérêt</h2>
+            {% if pois %}
+            <table>
+                <thead>
+                    <tr>
+                        <th>Nom</th>
+                        <th>Type</th>
+                        <th>Coordonnées</th>
+                        <th>Action</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for poi in pois %}
+                    <tr>
+                        <td>{{ poi.name }}</td>
+                        <td>{{ poi.type }}</td>
+                        <td>({{ "%.2f"|format(poi.x) }}, {{ "%.2f"|format(poi.y) }})</td>
+                        <td>
+                            <img src="../static/assets/pen.svg" alt="Renommer" 
+                                 class="rename-poi" 
+                                 data-poi-name="{{ poi.name }}"
+                                 style="cursor: pointer; width: 20px; height: 20px; margin-right: 10px;">
+                            <img src="../static/assets/trash.svg" alt="Supprimer" 
+                                 class="delete-poi" 
+                                 data-poi-name="{{ poi.name }}"
+                                 style="cursor: pointer; width: 20px; height: 20px;">
+                        </td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+            {% else %}
+            <p>Aucun point d'intérêt défini.</p>
+            {% endif %}
+        </div>
     </div>
 
     <form action="{{ url_for('main.delete_map', map_name=map_name) }}" method="post"
@@ -48,6 +85,53 @@
         </div>
     </div>
 </div>
+
+<div id="deleteConfirmDialog" class="dialog">
+    <div class="dialog-content">
+        <h2>Confirmer la suppression</h2>
+        <p>Êtes-vous sûr de vouloir supprimer ce point ?</p>
+        <div class="dialog-buttons">
+            <button onclick="confirmDelete()">Supprimer</button>
+            <button onclick="cancelDelete()">Annuler</button>
+        </div>
+    </div>
+</div>
+
+<div id="renameDialog" class="dialog">
+    <div class="dialog-content">
+        <h2>Renommer le point</h2>
+        <input type="text" id="newPointName" placeholder="Nouveau nom du point">
+        <div class="dialog-buttons">
+            <button onclick="confirmRename()">Renommer</button>
+            <button onclick="cancelRename()">Annuler</button>
+        </div>
+    </div>
+</div>
+
+<style>
+    .poi-list {
+        margin-top: 20px;
+        padding: 15px;
+        background-color: #f5f5f5;
+        border-radius: 5px;
+    }
+
+    .poi-list table {
+        width: 100%;
+        border-collapse: collapse;
+        margin-top: 10px;
+    }
+
+    .poi-list th, .poi-list td {
+        padding: 8px;
+        text-align: left;
+        border-bottom: 1px solid #ddd;
+    }
+
+    .poi-list th {
+        background-color: #f0f0f0;
+    }
+</style>
 
 <script>
     // Définir le nom de la map pour le script JavaScript
