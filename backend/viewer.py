@@ -35,7 +35,7 @@ def visualize_occupancy_data(file_path):
         fig.add_trace(go.Heatmap(
             z=obstacle_grid,
             colorscale='Reds',
-            colorbar=dict(title="Occupation")
+            showscale=False  # Cette ligne désactive la barre de couleur
         ))
 
         # Définir les couleurs pour chaque type de POI
@@ -73,14 +73,12 @@ def visualize_occupancy_data(file_path):
 
         # Mise à jour des axes et du titre
         fig.update_layout(
-            title="Visualisation interactive des obstacles",
+            title="Visualisation de la map",
             xaxis=dict(
-                title=f"X ({min_x:.2f} to {max_x:.2f})",
                 range=[min_x, max_x],
                 autorange=True
             ),
             yaxis=dict(
-                title=f"Y ({min_y:.2f} to {max_y:.2f})",
                 range=[min_y, max_y],
                 autorange=True
             ),
