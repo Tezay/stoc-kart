@@ -11,14 +11,17 @@ bp = Blueprint('main', __name__)
 # Route à la racine
 @bp.route('/')
 def home():
-    maps = list_npz_files("data/NPZ-output/")
-    print("maps :", maps)
-    return render_template('index.html', maps=maps)
+    return render_template('index.html')
 
 # Ajout d'une route pour servir les images générées
 @bp.route('/generated/<filename>')
 def serve_generated_file(filename):
     return send_from_directory('static/generated', filename)
+
+@bp.route('/maps_list')
+def maps_list():
+    maps = list_npz_files("data/NPZ-output/")
+    return render_template('maps_list.html', maps=maps)
 
 @bp.route('/viewer/<map_name>')
 def viewer(map_name):
