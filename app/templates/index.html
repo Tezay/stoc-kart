@@ -10,5 +10,10 @@
     <h1>Stoc'Kart</h1>
     <a href="{{ url_for('main.new_map') }}"><span>Créer une nouvelle map</span></a>
     <h2>Liste des maps enregistrées</h2>
+    <ul>
+        {% for map_name in maps %}
+            <li><a href="{{ url_for('main.viewer', map_name=map_name) }}">{{ map_name }}</a></li>
+        {% endfor %}
+    </ul>
 </body>
 </html>
