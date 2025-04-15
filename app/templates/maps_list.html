@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/button.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/map_list.css') }}">
+</head>
+<body>
+    <div id="container">
+        <h2>Liste des maps enregistrées</h2>
+        <ul>
+            {% for map_name in maps %}
+            <a href="{{ url_for('main.viewer', map_name=map_name) }}">
+                <li class="effect">
+                    <p>{{ map_name.replace('_', ' ') }}</p>
+                    <img src="../static/map_previews/{{ map_name }}.png" alt="{{ map_name.replace('npz', 'svg') }}"
+                         class="map-image">
+                </li>
+            </a>
+            {% endfor %}
+        </ul>
+    </div>
+</body>
+</html>
