@@ -14,7 +14,7 @@ def visualize_occupancy_data(file_path):
     """
     try:
         # Chargement des données
-        data = np.load(file_path)
+        data = np.load(file_path, allow_pickle=True)
         obstacle_grid = data["obstacle_grid"]
         min_x = data["min_x"]
         max_x = data["max_x"]
@@ -29,11 +29,44 @@ def visualize_occupancy_data(file_path):
         obstacle_grid = np.flipud(obstacle_grid)
 
         # Création de la visualisation interactive avec Plotly
-        fig = go.Figure(data=go.Heatmap(
+        fig = go.Figure()
+
+        # Ajout de la heatmap des obstacles
+        fig.add_trace(go.Heatmap(
             z=obstacle_grid,
             colorscale='Reds',
             colorbar=dict(title="Occupation")
         ))
+
+        # Définir les couleurs pour chaque type de POI
+        poi_colors = {
+            'start': 'blue',
+            'end': 'green'
+        }
+
+        # Ajout des POIs s'ils existent
+        if 'poi_x' in data:
+            poi_x = data['poi_x']
+            poi_y = data['poi_y']
+            poi_types = data['poi_types']
+            
+            # Créer un scatter plot pour chaque type de POI
+            for poi_type in np.unique(poi_types):
+                mask = poi_types == poi_type
+                fig.add_trace(go.Scatter(
+                    x=poi_x[mask],
+                    y=poi_y[mask],
+                    mode='markers',
+                    marker=dict(
+                        symbol='square',
+                        size=10,
+                        color=poi_colors.get(poi_type, 'gray')
+                    ),
+                    name=f'POI ({poi_type})',
+                    hoverinfo='text',
+                    text=[f'POI Type: {poi_type}<br>X: {x:.2f}<br>Y: {y:.2f}' 
+                          for x, y in zip(poi_x[mask], poi_y[mask])]
+                ))
 
         # Mise à jour des axes et du titre
         fig.update_layout(
@@ -41,12 +74,12 @@ def visualize_occupancy_data(file_path):
             xaxis=dict(
                 title=f"X ({min_x:.2f} to {max_x:.2f})",
                 range=[min_x, max_x],
-                autorange=True  # Activer l'autoscale pour l'axe X
+                autorange=True
             ),
             yaxis=dict(
                 title=f"Y ({min_y:.2f} to {max_y:.2f})",
                 range=[min_y, max_y],
-                autorange=True  # Activer l'autoscale pour l'axe Y
+                autorange=True
             ),
             height=600,
             width=800
