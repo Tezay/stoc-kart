@@ -181,3 +181,38 @@ def rename_poi_in_map(map_path, old_name, new_name):
     except Exception as e:
         print(f"Erreur lors du renommage du POI: {str(e)}")
         return False
+
+def add_new_path_to_map(map_path, path_points, path_name="path"):
+    """
+    Ajoute un nouveau chemin à la carte.
+    
+    Args:
+        map_path (str): Chemin vers le fichier NPZ
+        path_points (list): Liste de tuples (x,y) définissant les points du chemin
+        path_name (str): Nom du chemin à ajouter
+
+    Returns:
+        bool: True si l'ajout a réussi, False sinon
+    """
+    try:
+        data = dict(np.load(map_path, allow_pickle=True))
+        
+        if 'paths' not in data:
+            data['paths'] = {}
+        
+        # Convertir les points en arrays numpy
+        path_x = np.array([p[0] for p in path_points], dtype=float)
+        path_y = np.array([p[1] for p in path_points], dtype=float)
+        
+        # Stocker le chemin avec son nom
+        data['paths'][path_name] = {
+            'x': path_x,
+            'y': path_y
+        }
+        
+        np.savez(map_path, **data)
+        return True
+        
+    except Exception as e:
+        print(f"Erreur lors de l'ajout du chemin: {str(e)}")
+        return False

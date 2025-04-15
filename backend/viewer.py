@@ -71,6 +71,22 @@ def visualize_occupancy_data(file_path):
                               for name, x, y, m in zip(poi_names, poi_x[mask], poi_y[mask], mask) if m]
                 ))
 
+        # Ajout des chemins s'ils existent
+        if 'paths' in data:
+            paths = data['paths'].item()  # Convertir l'array numpy en dictionnaire Python
+            for path_name, path_data in paths.items():
+                fig.add_trace(go.Scatter(
+                    x=path_data['x'],
+                    y=path_data['y'],
+                    mode='lines',
+                    line=dict(
+                        color='red',
+                        width=2
+                    ),
+                    name=path_name,
+                    visible=True
+                ))
+
         # Mise à jour des axes et du titre
         fig.update_layout(
             title="Visualisation de la map",

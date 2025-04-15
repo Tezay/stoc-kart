@@ -3,7 +3,7 @@ from flask import Blueprint, redirect, url_for, render_template, request, send_f
 
 from backend.pathfinding.a_star import astar_pathfinding
 from backend.viewer import visualize_occupancy_data, get_map_data
-from backend.utils import list_npz_files, delete_map_files, add_poi_to_map, get_poi_map, delete_poi_from_map, rename_poi_in_map
+from backend.utils import list_npz_files, delete_map_files, add_poi_to_map, get_poi_map, delete_poi_from_map, rename_poi_in_map, add_new_path_to_map
 from backend.svg_convertor import svg_to_occupancy, save_occupancy_data
 
 # Créeation du blueprint pour les routes principales
@@ -96,6 +96,14 @@ def add_poi(map_name):
         poi_type=data['type'],
         poi_name=data.get('name', 'Point')
     )
+
+    # Faudrait donc faire le traitement pour le pathfinding à partir des données récupérées juste ici
+    # ...
+
+    # On peut ensuite sauvegarder le path obtenu avec cette fonction :
+    test_path = [(0, 0), (1, 1), (2, 2), (3, 3)]  # Liste de tuple exemple
+    add_new_path_to_map(file_path, test_path, "Chemin test")
+
     
     return jsonify({'success': success})
 
