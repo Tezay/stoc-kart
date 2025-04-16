@@ -116,9 +116,14 @@ def add_poi(map_name):
         if start_point is not None:
             grid, start_coords, end_coords = get_map_data(file_path, start_point["name"], data.get('name', 'Point'))
             path = astar_pathfinding(grid, start_coords, end_coords)
+            if not path:
+                delete_poi_from_map(file_path, data.get('name', 'Point'))
+                return jsonify({'success': False, 'message': "Aucun path trouvé. Le point est supprimé."})
             path_name = "path_to_" + data.get('name', 'Point')
             # Ajoute le chemin à la map
             add_new_path_to_map(file_path, path, path_name)
+
+            print("PATH : ",path)
     
     return jsonify({'success': success})
 

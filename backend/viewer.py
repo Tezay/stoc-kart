@@ -25,9 +25,6 @@ def visualize_occupancy_data(file_path):
         if obstacle_grid.dtype != np.float64:
             obstacle_grid = obstacle_grid.astype(float)
 
-        # Inverser l'axe Y pour correspondre à l'orientation de matplotlib
-        obstacle_grid = np.flipud(obstacle_grid)
-
         # Création de la visualisation interactive avec Plotly
         fig = go.Figure()
 

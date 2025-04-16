@@ -79,13 +79,16 @@ function confirmPointName() {
     })
     .then(response => response.json())
     .then(data => {
-        if (data.success) {
+        if (!data.success && data.message === "Aucun path trouvé. Le point est supprimé.") {
+            showError(data.message);
+            document.getElementById('errorDialog').addEventListener('click', () => location.reload());
+        } else if (!data.success) {
+            alert('Erreur lors de l\'ajout du point');
+        } else {
             if (selectedPointType === 'start') {
                 hasStartPoint = true;
             }
             location.reload();
-        } else {
-            alert('Erreur lors de l\'ajout du point');
         }
     });
     
