@@ -91,7 +91,6 @@ def visualize_occupancy_data(file_path):
 
         # Mise à jour des axes et du titre
         fig.update_layout(
-            title="Visualisation de la map",
             xaxis=dict(
                 range=[min_x, max_x],
                 autorange=True
@@ -100,8 +99,9 @@ def visualize_occupancy_data(file_path):
                 range=[min_y, max_y],
                 autorange=True
             ),
-            height=600,
-            width=800
+            height=500,
+            width=700,
+            margin=dict(l=10, r=10, t=10, b=10)  # Réduction des marges autour du graphique
         )
 
         # Retourne le contenu HTML du graphique
