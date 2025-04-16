@@ -141,6 +141,10 @@ def delete_poi_from_map(map_path, poi_name):
             # Trouver l'index du POI à supprimer
             idx = np.where(data['poi_names'] == poi_name)[0]
             if len(idx) > 0:
+                poi_type = data['poi_types'][idx[0]]
+                # Appel de la nouvelle fonction pour supprimer les chemins associés
+                delete_paths_associated_with_poi(data, poi_name, poi_type)
+
                 # Supprimer le POI de tous les arrays
                 data['poi_x'] = np.delete(data['poi_x'], idx)
                 data['poi_y'] = np.delete(data['poi_y'], idx)
@@ -155,6 +159,23 @@ def delete_poi_from_map(map_path, poi_name):
     except Exception as e:
         print(f"Erreur lors de la suppression du POI: {str(e)}")
         return False
+
+def delete_paths_associated_with_poi(data, poi_name, poi_type):
+    """
+    Supprime les chemins associés au point :
+    - Si c'est un 'start', supprime tous les chemins.
+    - Si c'est un 'end', supprime le chemin 'path_to_<poi_name>'.
+    """
+    if 'paths' not in data:
+        return
+    paths_dict = data['paths'].item() if isinstance(data['paths'], np.ndarray) else {}
+    if poi_type == 'start':
+        paths_dict.clear()
+    elif poi_type == 'end':
+        path_key = f"path_to_{poi_name}"
+        if path_key in paths_dict:
+            del paths_dict[path_key]
+    data['paths'] = np.array(paths_dict)
 
 def rename_poi_in_map(map_path, old_name, new_name):
     """
