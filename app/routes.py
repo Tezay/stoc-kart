@@ -119,7 +119,7 @@ def add_poi(map_name):
             path_name = "path_to_" + data.get('name', 'Point')
             # Ajoute le chemin à la map
             add_new_path_to_map(file_path, path, path_name)
-    
+
     return jsonify({'success': success})
 
 @bp.route('/delete_poi/<map_name>', methods=['POST'])

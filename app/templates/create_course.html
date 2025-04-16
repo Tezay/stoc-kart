@@ -17,28 +17,20 @@
 
 <main>
     {% if plot_html %}
-        <div id="plot-container">{{ plot_html|safe }}</div>
+    <div id="plot-container">{{ plot_html|safe }}</div>
     {% else %}
-        <p>Erreur : Impossible de charger le graphique.</p>
+    <p>Erreur : Impossible de charger le graphique.</p>
     {% endif %}
 
     <ul>
         {% for route in routes %}
-        <a href="#">
-            <li class="effect">
-                <p>{{ route.end }}</p>
-            </li>
-        </a>
+        <!-- route.start et route.end sont des attributs de l'objet Route -->
+        <li class="route">
+            <button class="effect"><span>{{route.end}}</span>
+            </button>
+        </li>
         {% endfor %}
     </ul>
-
-    <!--
-    <form class="controls">
-        <input name="start_point" value="{{ start_point }}">
-        <input name="end_point" value="{{ end_point }}">
-        <button type="submit">Créer la course</button>
-    </form>
-    -->
 </main>
 
 </body>
