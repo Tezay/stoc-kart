@@ -1,4 +1,9 @@
 #navbar {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    z-index: 1000;
     display: flex;
     flex-direction: row;
     justify-content: left;
@@ -7,7 +12,6 @@
     margin: 0;
     background: rgb(61, 106, 255);
     height: 10%;
-
     border-bottom-left-radius: 0.75rem;
     border-bottom-right-radius: 0.75rem;
 }
