@@ -122,8 +122,6 @@ def add_poi(map_name):
             path_name = "path_to_" + data.get('name', 'Point')
             # Ajoute le chemin à la map
             add_new_path_to_map(file_path, path, path_name)
-
-            print("PATH : ",path)
     
     return jsonify({'success': success})
 
