@@ -111,6 +111,7 @@ def add_poi(map_name):
             if point["type"] == np.str_('start'):
                 start_point = point
                 break
+        print(f"Point de départ trouvé : {start_point}")
         
         # Si on a un point de départ, on effectue le pathfinding
         if start_point is not None:

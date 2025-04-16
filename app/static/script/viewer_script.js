@@ -209,11 +209,10 @@ function closeRenameDialog() {
 }
 
 document.addEventListener('DOMContentLoaded', function() {
-    // Vérifier si un point de départ existe déjà dans la liste des POIs
     const pois = document.querySelectorAll('table tbody tr');
     pois.forEach(poi => {
-        const poiType = poi.querySelector('td:nth-child(2)').textContent;
-        if (poiType === 'start') {
+        const img = poi.querySelector('td:nth-child(2) img');
+        if (img && img.alt === 'Point de départ') {
             hasStartPoint = true;
         }
     });
