@@ -14,6 +14,19 @@
 <h1>{{map_name.replace('_', ' ').upper()}}</h1>
 
 <main>
+    <div class="controls">
+        <div id="controls-buttons">
+            <button id="add-start-btn"><img src="../static/assets/start-point.svg" alt="Point de départ"/>Ajouter un
+            point de départ
+        </button>
+        <button id="add-point-btn"><img src="../static/assets/end-point.svg" alt="Point d'arrivée"/>Ajouter un point
+            d'arrivée
+        </button>
+        </div>
+
+        <span id="click-instruction">Cliquez sur la carte pour placer le point</span>
+    </div>
+
     <div class="map-container">
         {% if plot_html %}
         <div id="plotContainer">{{ plot_html|safe }}</div>
@@ -21,46 +34,44 @@
         <p>Erreur : Impossible de charger le graphique.</p>
         {% endif %}
 
-        <div class="controls">
-            <button id="add-start-btn"><img src="../static/assets/start-point.svg" alt="Point de départ"/>Ajouter un
-                point de départ
-            </button>
-            <button id="add-point-btn"><img src="../static/assets/end-point.svg" alt="Point d'arrivée"/>Ajouter un point
-                d'arrivée
-            </button>
-            <span id="click-instruction">Cliquez sur la carte pour placer le point</span>
-        </div>
-
         <div class="poi-list">
             <h2>Points d'intérêt</h2>
             {% if pois %}
             <table>
                 <thead>
-                    <tr>
-                        <th>Nom</th>
-                        <th>Type</th>
-                        <th>Coordonnées</th>
-                        <th>Action</th>
-                    </tr>
+                <tr>
+                    <th>Nom</th>
+                    <th>Type</th>
+                    <th>Coordonnées</th>
+                    <th>Action</th>
+                </tr>
                 </thead>
                 <tbody>
-                    {% for poi in pois %}
-                    <tr>
-                        <td>{{ poi.name }}</td>
-                        <td>{{ poi.type }}</td>
-                        <td>({{ "%.2f"|format(poi.x) }}, {{ "%.2f"|format(poi.y) }})</td>
-                        <td>
-                            <img src="../static/assets/pen.svg" alt="Renommer" 
-                                 class="rename-poi" 
-                                 data-poi-name="{{ poi.name }}"
-                                 style="cursor: pointer; width: 20px; height: 20px; margin-right: 10px;">
-                            <img src="../static/assets/trash.svg" alt="Supprimer" 
-                                 class="delete-poi" 
-                                 data-poi-name="{{ poi.name }}"
-                                 style="cursor: pointer; width: 20px; height: 20px;">
-                        </td>
-                    </tr>
-                    {% endfor %}
+                {% for poi in pois %}
+                <tr>
+                    <td>{{ poi.name }}</td>
+                    <td>
+                        {% if poi.type == 'start' %}
+                        <img src="../static/assets/start-point.svg" alt="Point de départ"
+                             style="width: 20px; height: 20px;">
+                        {% else %}
+                        <img src="../static/assets/end-point.svg" alt="Point d'arrivée"
+                             style="width: 20px; height: 20px;">
+                        {% endif %}
+                    </td>
+                    <td>({{ "%.2f"|format(poi.x) }}, {{ "%.2f"|format(poi.y) }})</td>
+                    <td>
+                        <img src="../static/assets/pen.svg" alt="Renommer"
+                             class="rename-poi"
+                             data-poi-name="{{ poi.name }}"
+                             style="cursor: pointer; width: 20px; height: 20px; margin-right: 10px;">
+                        <img src="../static/assets/trash.svg" alt="Supprimer"
+                             class="delete-poi"
+                             data-poi-name="{{ poi.name }}"
+                             style="cursor: pointer; width: 20px; height: 20px;">
+                    </td>
+                </tr>
+                {% endfor %}
                 </tbody>
             </table>
             {% else %}
@@ -69,7 +80,7 @@
         </div>
     </div>
 
-    <form action="{{ url_for('main.delete_map', map_name=map_name) }}" method="post"
+    <form id="delete" action="{{ url_for('main.delete_map', map_name=map_name) }}" method="post"
           onsubmit="return confirm('Êtes-vous sûr de vouloir supprimer cette map ? Cette action est irréversible.')">
         <button type="submit" class="effect-red">Supprimer la map</button>
     </form>
@@ -78,7 +89,7 @@
 <div id="pointNameDialog" class="dialog">
     <div class="dialog-content">
         <h2>Nommer le point</h2>
-        <input type="text" id="pointName" placeholder="Entrez un nom pour ce point">
+        <input type="text" id="pointName" placeholder="Nom du point ...">
         <div class="dialog-buttons">
             <button onclick="confirmPointName()">Valider</button>
             <button onclick="cancelPointName()">Annuler</button>
@@ -116,31 +127,6 @@
         </div>
     </div>
 </div>
-
-<style>
-    .poi-list {
-        margin-top: 20px;
-        padding: 15px;
-        background-color: #f5f5f5;
-        border-radius: 5px;
-    }
-
-    .poi-list table {
-        width: 100%;
-        border-collapse: collapse;
-        margin-top: 10px;
-    }
-
-    .poi-list th, .poi-list td {
-        padding: 8px;
-        text-align: left;
-        border-bottom: 1px solid #ddd;
-    }
-
-    .poi-list th {
-        background-color: #f0f0f0;
-    }
-</style>
 
 <script>
     // Définir le nom de la map pour le script JavaScript

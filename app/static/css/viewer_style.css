@@ -3,6 +3,7 @@ main {
     flex-direction: column;
     align-items: center;
     justify-content: center;
+    gap: 1rem;
 }
 
 .map-container {
@@ -10,6 +11,7 @@ main {
     flex-direction: row;
     justify-content: center;
     align-items: center;
+    height: 50%;
 }
 
 .controls {
@@ -17,10 +19,17 @@ main {
     flex-direction: column;
     align-items: center;
     gap: 0.5rem;
-    margin: 10px;
     padding: 20px;
     border: 1px solid #ccc;
     border-radius: 5px;
+}
+
+#controls-buttons {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: row;
+    gap: 0.5rem;
 }
 
 button {
@@ -47,7 +56,21 @@ img {
     z-index: 1000;
 }
 
+.dialog input {
+    width: 100%;
+    padding: 10px;
+    margin-bottom: 10px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+}
+
 .dialog-content {
+
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+
     background-color: white;
     padding: 20px;
     border-radius: 5px;
@@ -57,11 +80,61 @@ img {
     transform: translate(-50%, -50%);
 }
 
+#pointName {
+    text-align: center;
+}
+
 .dialog-buttons {
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    align-items: center;
+
     margin-top: 15px;
     text-align: right;
 }
 
 .dialog-buttons button {
     margin-left: 10px;
+}
+
+.poi-list {
+    margin-top: 20px;
+    padding: 15px;
+    background-color: #f5f5f5;
+    border-radius: 5px;
+}
+
+.poi-list table {
+    width: 80%;
+    border-collapse: collapse;
+    margin-top: 10px;
+}
+
+.poi-list tbody {
+    margin-left: 10px;
+    display: block;
+    height: 200px; /* Set the desired height */
+    overflow-y: scroll; /* Enables scrolling */
+    border: 1px solid black;
+}
+
+.poi-list thead, .poi-list tbody tr {
+    display: table;
+    width: 100%;
+    table-layout: fixed;
+}
+
+.poi-list th, .poi-list td {
+    padding: 8px;
+    text-align: center;
+    border-bottom: 1px solid #ddd;
+}
+
+.poi-list th {
+    background-color: #f0f0f0;
+}
+
+#delete {
+    margin-bottom: 20px;
 }
