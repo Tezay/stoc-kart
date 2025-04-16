@@ -226,3 +226,130 @@ def add_new_path_to_map(map_path, path_points, path_name="path"):
     except Exception as e:
         print(f"Erreur lors de l'ajout du chemin: {str(e)}")
         return False
+
+def add_obstacle_to_map(map_path, points):
+    """
+    Ajoute un obstacle linéaire constitué d'une séquence de points à la carte.
+    
+    Args:
+        map_path (str): Chemin vers le fichier NPZ
+        points (list): Liste de dictionnaires {x: float, y: float} définissant les points de l'obstacle
+
+    Returns:
+        bool: True si l'ajout a réussi, False sinon
+    """
+    try:
+        # Charger les données existantes
+        print(f"Chargement du fichier NPZ: {map_path}")
+        with np.load(map_path, allow_pickle=True) as npz_file:
+            # Convertir en dictionnaire Python standard pour modifications
+            data = dict(npz_file)
+        
+        # Récupérer la grille d'obstacles et les limites
+        obstacle_grid = data['obstacle_grid'].copy()  # Créer une copie pour la modification
+        min_x = data['min_x']
+        max_x = data['max_x']
+        min_y = data['min_y']
+        max_y = data['max_y']
+        
+        # Afficher l'état initial
+        height, width = obstacle_grid.shape
+        print(f"Dimensions de la grille: {width}x{height}")
+        print(f"Limites: X({min_x}, {max_x}), Y({min_y}, {max_y})")
+        print(f"Nombre d'obstacles avant: {np.sum(obstacle_grid)}")
+        
+        # Pour chaque paire de points consécutifs, tracer une ligne
+        total_pixels_modified = 0
+        
+        for i in range(len(points) - 1):
+            p1, p2 = points[i], points[i+1]
+            
+            # Convertir les coordonnées en indices de grille
+            # Attention: les coordonnées y peuvent être inversées selon convention
+            x1 = float(p1['x'])
+            y1 = float(p1['y'])
+            x2 = float(p2['x'])
+            y2 = float(p2['y'])
+            
+            print(f"Segment {i+1}: de ({x1}, {y1}) à ({x2}, {y2})")
+            
+            # Convertir en coordonnées de grille
+            grid_x1 = int((x1 - min_x) * width / (max_x - min_x))
+            grid_y1 = int((y1 - min_y) * height / (max_y - min_y))
+            grid_x2 = int((x2 - min_x) * width / (max_x - min_x))
+            grid_y2 = int((y2 - min_y) * height / (max_y - min_y))
+            
+            print(f"Coordonnées grille: de ({grid_x1}, {grid_y1}) à ({grid_x2}, {grid_y2})")
+            
+            # Algorithme de tracé de ligne simplifié (algorithme de Bresenham)
+            pixels_modified = 0
+            
+            # Calculer les différences et les pas
+            dx = abs(grid_x2 - grid_x1)
+            dy = abs(grid_y2 - grid_y1)
+            sx = 1 if grid_x1 < grid_x2 else -1
+            sy = 1 if grid_y1 < grid_y2 else -1
+            
+            if dx > dy:
+                # Pente < 1
+                err = dx / 2
+                x, y = grid_x1, grid_y1
+                for _ in range(dx + 1):
+                    if 0 <= x < width and 0 <= y < height:
+                        obstacle_grid[y, x] = True
+                        pixels_modified += 1
+                    err -= dy
+                    if err < 0:
+                        y += sy
+                        err += dx
+                    x += sx
+            else:
+                # Pente >= 1
+                err = dy / 2
+                x, y = grid_x1, grid_y1
+                for _ in range(dy + 1):
+                    if 0 <= x < width and 0 <= y < height:
+                        obstacle_grid[y, x] = True
+                        pixels_modified += 1
+                    err -= dx
+                    if err < 0:
+                        x += sx
+                        err += dy
+                    y += sy
+            
+            print(f"Pixels modifiés dans ce segment: {pixels_modified}")
+            total_pixels_modified += pixels_modified
+        
+        # Vérifier s'il y a eu des modifications
+        print(f"Total des pixels modifiés: {total_pixels_modified}")
+        print(f"Nombre d'obstacles après: {np.sum(obstacle_grid)}")
+        
+        if total_pixels_modified == 0:
+            print("Aucun pixel n'a été modifié!")
+            return False
+        
+        # Mettre à jour le dictionnaire avec la nouvelle grille
+        data['obstacle_grid'] = obstacle_grid
+        
+        # Sauvegarder le dictionnaire mis à jour dans le fichier NPZ
+        print(f"Sauvegarde des modifications dans {map_path}")
+        np.savez(map_path, **data)
+        
+        # Vérifier que la sauvegarde a bien fonctionné
+        with np.load(map_path, allow_pickle=True) as check_file:
+            check_grid = check_file['obstacle_grid']
+            check_count = np.sum(check_grid)
+            print(f"Vérification: {check_count} obstacles dans le fichier sauvegardé")
+            
+            if check_count == np.sum(obstacle_grid):
+                print("Sauvegarde réussie!")
+                return True
+            else:
+                print("ERREUR: La sauvegarde ne contient pas le bon nombre d'obstacles!")
+                return False
+        
+    except Exception as e:
+        print(f"Erreur lors de l'ajout de l'obstacle: {str(e)}")
+        import traceback
+        traceback.print_exc()
+        return False
