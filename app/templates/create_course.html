@@ -1,18 +1,14 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Viewer</title>
-    <script src="https://cdn.plot.ly/plotly-latest.min.js"></script>
-    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+{% extends "base.html" %}
+
+{% block extra_css %}
     <link rel="stylesheet" href="{{ url_for('static', filename='css/create_course.css') }}">
-    <link rel="stylesheet" href="{{ url_for('static', filename='css/button.css') }}">
-</head>
-<body>
-<header>
-    <h1>Sélectionnez la course</h1>
-</header>
+{% endblock %}
+
+
+{% block content %}
+<h1>
+    <h1>Sélectionner la course</h1>
+</h1>
 
 
 <main>
@@ -32,6 +28,4 @@
         {% endfor %}
     </ul>
 </main>
-
-</body>
-</html>
+{% endblock %}

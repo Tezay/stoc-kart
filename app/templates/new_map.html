@@ -1,15 +1,10 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Stoc'Kart</title>
-    <!-- Import de la feuille de style CSS globale -->
-    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
-    <!-- Import de la feuille de style spécifique pour la nouvelle carte -->
+{% extends "base.html" %}
+
+{% block extra_css %}
     <link rel="stylesheet" href="{{ url_for('static', filename='css/new_map_style.css') }}">
-</head>
-<body>
+{% endblock %}
+
+{% block content %}
     <form id="process-form" method="POST" enctype="multipart/form-data" action="{{ url_for('main.upload_and_process_svg') }}">
         <input type="file" name="svg_file" id="file-input" accept=".svg" />
         <label for="file-input" class="file-input-label effect">Choose SVG File</label>
@@ -38,5 +33,4 @@
             });
         });
     </script>
-</body>
-</html>
+{% endblock %}

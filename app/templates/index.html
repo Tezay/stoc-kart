@@ -1,23 +1,18 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Stoc'Kart</title>
-    <link rel="stylesheet" href="{{ url_for('static', filename='css/index_style.css') }}">
-    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
-    <link rel="stylesheet" href="{{ url_for('static', filename='css/button.css') }}">
-</head>
-<body>
-    <div id="title">
-        <h1>Stoc'Kart</h1>
-        <hr/>
-        <div id="action-buttons">
-            <button class="effect" onclick="location.href = '/new_map'">Nouvelle map</button>
-            <button class="effect" onclick="location.href = '/maps_list'">Liste des maps</button>
-            <button class="effect-reverse" id="wide" onclick="location.href = '/select_map'">Nouvelle course</button>
-        </div>
-    </div>
+{% extends "base.html" %}
 
-</body>
-</html>
+{% block extra_css %}
+<link rel="stylesheet" href="{{ url_for('static', filename='css/index_style.css') }}">
+{% endblock %}
+
+
+{% block content %}
+<div id="title">
+    <h1>Stoc'Kart</h1>
+    <hr/>
+    <div id="action-buttons">
+        <button class="effect" onclick="location.href = '/new_map'">Nouvelle map</button>
+        <button class="effect" onclick="location.href = '/maps_list'">Liste des maps</button>
+        <button class="effect-reverse" id="wide" onclick="location.href = '/select_map'">Nouvelle course</button>
+    </div>
+</div>
+{% endblock %}

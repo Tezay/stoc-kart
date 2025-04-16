@@ -1,13 +1,11 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <title>Title</title>
-    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
-    <link rel="stylesheet" href="{{ url_for('static', filename='css/button.css') }}">
+{% extends "base.html" %}
+
+{% block extra_css %}
     <link rel="stylesheet" href="{{ url_for('static', filename='css/map_list.css') }}">
-</head>
-<body>
+{% endblock %}
+
+
+{% block content %}
     <div id="container">
         <h2>Sélectionnez la map</h2>
         <ul>
@@ -22,5 +20,4 @@
             {% endfor %}
         </ul>
     </div>
-</body>
-</html>
+{% endblock %}

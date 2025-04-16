@@ -1,31 +1,11 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Viewer</title>
+{% extends "base.html" %}
+
+{% block extra_css %}
     <link rel="stylesheet" href="{{ url_for('static', filename='css/map_viewer.css') }}">
-    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
-    <link rel="stylesheet" href="{{ url_for('static', filename='css/button.css') }}">
-    <script src="https://cdn.plot.ly/plotly-latest.min.js"></script>
     <link rel="stylesheet" href="{{ url_for('static', filename='css/viewer_style.css') }}">
-</head>
-<body>
-<nav>
-    <ul id="navbar">
-        <li>
-            <a href="https://stockart-presentation.webflow.io/" target="_blank" >
-                <img src="../static/assets/logo.svg" alt="Accueil" id="logo"/>
-            </a>
-        </li>
-        <li>
-            <a href="{{ url_for('main.home') }}" >Accueil</a>
-        </li>
-        <li>
-            <a href="https://stockart-presentation.webflow.io" target="_blank">Découvrir le produit</a>
-        </li>
-    </ul>
-</nav>
+{% endblock %}
+
+{% block content %}
 
 <h1>{{map_name.replace('_', ' ').upper()}}</h1>
 
@@ -152,5 +132,5 @@
     const mapName = "{{ map_name }}";
 </script>
 <script src="{{ url_for('static', filename='script/viewer_script.js') }}"></script>
-</body>
-</html>
+
+{% endblock %}
