@@ -14,12 +14,17 @@ def visualize_occupancy_data(file_path):
     """
     try:
         # Chargement des données
+        print(f"Chargement des données pour la visualisation: {file_path}")
         data = np.load(file_path, allow_pickle=True)
         obstacle_grid = data["obstacle_grid"]
         min_x = data["min_x"]
         max_x = data["max_x"]
         min_y = data["min_y"]
         max_y = data["max_y"]
+        
+        print(f"Dimensions de la grille d'obstacles: {obstacle_grid.shape}")
+        print(f"Nombre d'obstacles: {np.sum(obstacle_grid)}")
+        print(f"Limites: X({min_x}, {max_x}), Y({min_y}, {max_y})")
 
         # Vérification et conversion des données pour Plotly
         if obstacle_grid.dtype != np.float64:

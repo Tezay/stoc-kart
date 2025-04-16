@@ -7,7 +7,7 @@ from scipy.interpolate import griddata
 
 from backend.pathfinding.a_star import astar_pathfinding
 from backend.viewer import visualize_occupancy_data, get_map_data
-from backend.utils import list_npz_files, delete_map_files, add_poi_to_map, get_poi_map, delete_poi_from_map, rename_poi_in_map, add_new_path_to_map
+from backend.utils import list_npz_files, delete_map_files, add_poi_to_map, get_poi_map, delete_poi_from_map, rename_poi_in_map, add_new_path_to_map, add_obstacle_to_map
 from backend.svg_convertor import svg_to_occupancy, save_occupancy_data
 
 # Créeation du blueprint pour les routes principales
@@ -176,3 +176,26 @@ def create_course(map_name):
             })
     
     return render_template('create_course.html', plot_html=plot_html, map_name=map_name, routes=routes)
+
+@bp.route('/add_obstacle/<map_name>', methods=['POST'])
+def add_obstacle(map_name):
+    data = request.get_json()
+    file_path = os.path.join("data/NPZ-output", f"{map_name}.npz")
+    
+    print(f"Requête d'ajout d'obstacle pour la carte: {map_name}")
+    print(f"Données reçues: {data}")
+    
+    # Vérifier que nous avons au moins deux points pour créer l'obstacle
+    if not data.get('points') or len(data['points']) < 2:
+        print("Erreur: Pas assez de points pour créer un obstacle")
+        return jsonify({'success': False, 'message': 'Au moins deux points sont nécessaires pour créer un obstacle'})
+    
+    print(f"Nombre de points: {len(data['points'])}")
+    for i, point in enumerate(data['points']):
+        print(f"Point {i+1}: x={point.get('x')}, y={point.get('y')}")
+    
+    # Ajouter l'obstacle à la carte
+    success = add_obstacle_to_map(file_path, data['points'])
+    print(f"Résultat de l'ajout d'obstacle: {'Succès' if success else 'Échec'}")
+    
+    return jsonify({'success': success})
