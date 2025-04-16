@@ -22,7 +22,6 @@ button:hover {
 .effect, .effect-red, .effect-reverse:hover {
     color: #000;
     background: transparent;
-    box-shadow: 0 0 0 0 transparent;
     -webkit-transition: all 0.2s ease-in;
     -moz-transition: all 0.2s ease-in;
     transition: all 0.2s ease-in;

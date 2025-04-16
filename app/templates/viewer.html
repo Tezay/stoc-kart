@@ -11,6 +11,22 @@
     <link rel="stylesheet" href="{{ url_for('static', filename='css/viewer_style.css') }}">
 </head>
 <body>
+<nav>
+    <ul id="navbar">
+        <li>
+            <a href="https://stockart-presentation.webflow.io/" target="_blank" >
+                <img src="../static/assets/logo.svg" alt="Accueil" id="logo"/>
+            </a>
+        </li>
+        <li>
+            <a href="{{ url_for('main.home') }}" >Accueil</a>
+        </li>
+        <li>
+            <a href="https://stockart-presentation.webflow.io" target="_blank">Découvrir le produit</a>
+        </li>
+    </ul>
+</nav>
+
 <h1>{{map_name.replace('_', ' ').upper()}}</h1>
 
 <main>
